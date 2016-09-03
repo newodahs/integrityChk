@@ -6,7 +6,7 @@ A quick script that acts as a very basic IDS for a local FreeBSD system.  The co
 
 To get going with integrityChk, simply place the script local to the box you wish to check and execute it.
  * The first execution should be done with -g | --generate
-  * This will generate your baseline archive of hashes
+  * This will generate your baseline archive of hashes - archive is called osChk.tgz; assumes root as user running it and the archive is found in /root by default...
   * This also copies the integrityChk script into the archive, effectively making the archive a all-in-one package for later verification
   * IMPORTANT NOTE: You will be prompted to supply a secret key during execution; REMEMBER THIS KEY - IT CAN NOT BE RECOVERED IN ANY REASONABLE WAY
   * IMPORTANT NOTE: Do NOT leave this archive on the system you generate on; instead secure it offline for later use in later verification
