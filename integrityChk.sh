@@ -144,8 +144,8 @@ verifyChksums()
       setupKey
    fi
 
-   if [ ! -e "$validatePath/$DEFAULT_MASTER_CHKSUMHASH/$DEFAULT_MASTER_CHKSUMCOMP_NAME" ]; then
-      printf "Could not find a valid composite checksum at %s. You may need to regenerate the checksum archive.\n" "$validatePath/$DEFAULT_MASTER_CHKSUMHASH/"
+   if [ ! -e "$validatePath/$DEFAULT_MASTER_CHKSUMHASH_PATH/$DEFAULT_MASTER_CHKSUMCOMP_NAME" ]; then
+      printf "Could not find a valid composite checksum at %s. You may need to regenerate the checksum archive.\n" "$validatePath/$DEFAULT_MASTER_CHKSUMHASH_PATH/"
       return 1
    fi
 
@@ -249,6 +249,10 @@ if [ $GENERATE -eq 1 ];then
    fi
 elif [ $VALIDATE -eq 1 ]; then
    verifyChksums $scriptPath $DEFAULT_DIFF_CHKSUM_PATH
+   if [ $? -ne 0 ]; then
+      printf "Validation process failed.  We're files moved around or was the secret input incorrectly?\n"
+      exit 3
+   fi
    showDiff $scriptPath $DEFAULT_DIFF_CHKSUM_PATH
 fi
 
