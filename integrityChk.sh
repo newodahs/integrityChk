@@ -15,6 +15,7 @@ CHKDIRLIST="/bin /sbin /usr/bin /usr/sbin /usr/local/bin /etc /usr/local/etc"
 
 SEED_KEY=
 OPENSSL_BIN=`which openssl`
+OPENSSL_0_X=`$OPENSSL_BIN version | openssl version | awk '{split($0, a, " "); if (match(a[2], /^0\./) != 0) print 1; else print 0;}' | tr -d " "`
 
 DEFAULT_MASTER_CHKSUM_PATH="/root/os_chk"
 DEFAULT_MASTER_CHKSUMHASH_PATH="hash"
@@ -54,11 +55,16 @@ setupKey()
    printf "Please enter the secret key: "
    stty -echo
    read key
-   hexkey=`echo "$key" | $OPENSSL_BIN dgst -sha256 | awk '{split($0, a, " "); print toupper(a[2]);}' | tr -d " "`
+   if [ $OPENSSL_0_X = 1 ]; then
+      hexkey=`echo "$key" | $OPENSSL_BIN dgst -sha256 | awk '{split($0, a, " "); print toupper(a[1]);}' | tr -d " "`
+   else
+      hexkey=`echo "$key" | $OPENSSL_BIN dgst -sha256 | awk '{split($0, a, " "); print toupper(a[2]);}' | tr -d " "`
+   fi
    SEED_KEY=`echo "$hexkey" | bc`
    stty echo
    printf "\n"
    IFS="$OLDIFS"
+   exit
 }
 
 archiveChksums()
@@ -91,7 +97,7 @@ archiveChksums()
    printf "Archiving system master checksums; checksums will be removed from disk after this operation completes.\n\n***NOTE: This archive will be encrypted with the secret you entered earlier!\n"
    tar -C $archivePath -zcf $savePath/$DEFAULT_MASTER_ARCHIVE_NAME $SCRIPT_NAME $DEFAULT_MASTER_CHKSUMHASH_PATH 2> /dev/null
 
-   printf "Removing checksum files...\n"
+   printf "Cleaning up...\n"
    rm -f $archivePath/$DEFAULT_MASTER_CHKSUMHASH_PATH/*$DEFAULT_MASTER_CHKSUM_EXT $archivePath/$DEFAULT_MASTER_CHKSUMHASH_PATH/$DEFAULT_MASTER_CHKSUMCOMP_NAME $archivePath/$SCRIPT_NAME
 
    return 0
@@ -241,8 +247,6 @@ if [ $GENERATE -eq 1 ];then
    if [ $? -ne 0 ]; then
       printf "Archiving master checksums did not complete. Please re-run the generate command to try again\n"
       exit 2
-   else
-
    fi
 elif [ $VALIDATE -eq 1 ]; then
    verifyChksums $scriptPath $DEFAULT_DIFF_CHKSUM_PATH
