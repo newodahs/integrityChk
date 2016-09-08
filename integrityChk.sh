@@ -64,7 +64,6 @@ setupKey()
    stty echo
    printf "\n"
    IFS="$OLDIFS"
-   exit
 }
 
 archiveChksums()
