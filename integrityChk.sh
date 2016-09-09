@@ -17,14 +17,14 @@ SEED_KEY=
 OPENSSL_BIN=`which openssl`
 OPENSSL_0_X=`$OPENSSL_BIN version | openssl version | awk '{split($0, a, " "); if (match(a[2], /^0\./) != 0) print 1; else print 0;}' | tr -d " "`
 
-DEFAULT_MASTER_CHKSUM_PATH="/root/os_chk"
+DEFAULT_MASTER_CHKSUM_PATH="/tmp/os_chk_master"
 DEFAULT_MASTER_CHKSUMHASH_PATH="hash"
 DEFAULT_MASTER_CHKSUM_EXT="_hash.dir"
 DEFAULT_MASTER_CHKSUMCOMP_NAME="composite.hash"
-DEFAULT_MASTER_ARCHIVE_PATH="/root"
+DEFAULT_MASTER_ARCHIVE_PATH="/tmp"
 DEFAULT_MASTER_ARCHIVE_NAME="osChk.tgz"
 
-DEFAULT_DIFF_CHKSUM_PATH="/tmp/os_chk"
+DEFAULT_DIFF_CHKSUM_PATH="/tmp/os_chk_diff"
 DEFAULT_DIFF_CHKSUM_EXT="_hash.diff"
 DEFAULT_DIFF_CHKSUMCOMP_NAME="composite.hash"
 
